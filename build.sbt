@@ -24,3 +24,16 @@ licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 
 bintrayOrganization in bintray := None
 
+pomExtra := (
+  <scm>
+    <url>git@github.com:eamelink/sbt-purescript.git</url>
+    <connection>scm:git:git@github.com:eamelink/sbt-purescript.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>eamelink</id>
+      <name>Erik Bakker</name>
+      <url>https://github.com/eamelink</url>
+    </developer>
+  </developers>
+)
