@@ -39,7 +39,6 @@ object SbtPureScript extends AutoPlugin {
       streams.value.log.info(s"Purescript compiling on ${sourcePaths.length} source(s)")
 
       val command = executable.value :: pscOptions.value.toList ++ ("--output" :: output.value.absolutePath :: sourcePaths)
-      println("Executing command: " + command)
       command ! (streams.value.log)
 
       Seq(output.value)
