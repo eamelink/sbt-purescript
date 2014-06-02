@@ -6,7 +6,7 @@ resolvers ++= Seq(
   "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/")
 
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.0-RC2")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.0")
 
 // web plugins
 
