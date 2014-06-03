@@ -20,8 +20,9 @@ Or in a Play Framework project:
   * Run Play
   * Observe the JS file on `http://localhost:9000/main.js`
 
-Options
+## Options
 
 There's a `pscOptions` key, with a sequence of parameters given to the `psc` command. You need to scope with within the `Assets` config. For example:
 
+    import PureScriptKeys._
     pscOptions in Assets := Seq("--module", "Main", "--main") 
