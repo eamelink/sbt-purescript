@@ -38,7 +38,7 @@ object SbtPureScript extends AutoPlugin {
     includeFilter in purescript := "*.purs",
 
     purescript := {
-      val sourceFiles = (sourceDirectory.value ** ((includeFilter in purescript).value -- (excludeFilter in purescript).value)).get
+      val sourceFiles = (sourceDirectories.value ** ((includeFilter in purescript).value -- (excludeFilter in purescript).value)).get
       val sourcePaths = sourceFiles.getPaths.toList
       streams.value.log.info(s"Purescript compiling on ${sourcePaths.length} source(s)")
 
