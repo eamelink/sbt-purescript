@@ -8,4 +8,4 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.1"
 
-pscOptions in Assets := Seq("--module", "Main", "--main")
+pscOptions in Assets := Seq("--module", "HelloWorld", "--main", "HelloWorld")

@@ -11,8 +11,9 @@ import xsbti.{ Problem, Severity }
 object Import {
   object PureScriptKeys {
     val purescript = TaskKey[Seq[File]]("purescript", "Invoke the PureScript compiler.")
+    val psci = TaskKey[Unit]("psci", "Start a Purescript REPL with sources loaded.")
 
-    val executable = SettingKey[String]("purescript-executable", "The PureScript psc executable.")
+    val executable = SettingKey[String]("purescript-executable", "The PureScript executable.")
     val output = SettingKey[File]("purescript-output-file", "PureScript output js file.")
     val pscOptions = SettingKey[Seq[String]]("purescript-psc-options", "Purescript compiler options")
   }
@@ -36,18 +37,25 @@ object SbtPureScript extends AutoPlugin {
     output := (resourceManaged in purescript).value / "js" / "main.js",
 
     includeFilter in purescript := "*.purs",
+    sources in purescript := (sourceDirectories.value ** ((includeFilter in purescript).value -- (excludeFilter in purescript).value)).get,
 
     purescript := {
-      val sourceFiles = (sourceDirectories.value ** ((includeFilter in purescript).value -- (excludeFilter in purescript).value)).get
-      val sourcePaths = sourceFiles.getPaths.toList
-      streams.value.log.info(s"Purescript compiling on ${sourcePaths.length} source(s)")
+      streams.value.log.info(s"Purescript compiling on ${(sources in purescript).value.length} source(s)")
 
-      val command = executable.value :: pscOptions.value.toList ++ ("--output" :: output.value.absolutePath :: sourcePaths)
+      val command = executable.value :: pscOptions.value.toList ++ ("--output" :: output.value.absolutePath :: (sources in purescript).value.getPaths.toList)
 
-      val problems = doCompile(command, sourceFiles)
+      val problems = doCompile(command, sources.value)
       CompileProblems.report((reporter in purescript).value, problems)
 
       Seq(output.value)
+    },
+
+    (executable in psci) := "psci",
+
+    psci := {
+      streams.value.log.info(s"Starting ${executable.value} with ${(sources in purescript).value.length} source files...")
+      val command = (executable in psci).value :: (sources in purescript).value.getPaths.toList
+      Process(command).run(true).exitValue()
     },
 
     resourceGenerators <+= purescript)
@@ -57,7 +65,8 @@ object SbtPureScript extends AutoPlugin {
       resourceManaged in purescript := webTarget.value / "purescript" / "main")) ++
       inConfig(TestAssets)(basePureScriptSettings ++ Seq(
         resourceManaged in purescript := webTarget.value / "purescript" / "test")) ++ Seq(
-        purescript := (purescript in Assets).value)
+        purescript := (purescript in Assets).value,
+        psci := (psci in Assets).value)
 
   def doCompile(command: Seq[String], sourceFiles: Seq[File]): Seq[Problem] = {
     val (buffer, pscLogger) = logger
