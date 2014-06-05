@@ -6,7 +6,7 @@ sbt-purescript is an SBT plugin that compiles [PureScript](http://purescript.org
 
 To use a stable release, add the following to the `project/plugins.sbt` of your project:
 
-    addSbtPlugin("net.eamelink.sbt" % "sbt-purescript" % "0.3.1")
+    addSbtPlugin("net.eamelink.sbt" % "sbt-purescript" % "0.4.0")
 
 To use the latest from Github, add the following to the `project/plugins.sbt` of your project:
 

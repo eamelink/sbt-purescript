@@ -6,7 +6,7 @@ organization := "net.eamelink.sbt"
 
 name := "sbt-purescript"
 
-version := "0.4.0-SNAPSHOT"
+version := "0.4.0"
 
 scalaVersion := "2.10.4"
 
