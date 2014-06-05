@@ -4,9 +4,14 @@ sbt-purescript is an SBT plugin that compiles [PureScript](http://purescript.org
 
 # Usage
 
-Add the following to the `project/plugins.sbt` of your project:
+To use a stable release, add the following to the `project/plugins.sbt` of your project:
 
     addSbtPlugin("net.eamelink.sbt" % "sbt-purescript" % "0.3.1")
+
+To use the latest from Github, add the following to the `project/plugins.sbt` of your project:
+
+    lazy val root = project.in(file(".")).dependsOn(sbtPurescript)
+    lazy val sbtPurescript = uri("git://github.com/eamelink/sbt-purescript")
 
 Then:
 
@@ -19,6 +24,8 @@ Or in a Play Framework project:
   * Put your PureScript files (with extension `purs` into `app/assets`)
   * Run Play
   * Observe the JS file on `http://localhost:9000/main.js`
+
+There is also a `psci` command that will run the purescript interpreter, with your sources loaded.
 
 ## Options
 
