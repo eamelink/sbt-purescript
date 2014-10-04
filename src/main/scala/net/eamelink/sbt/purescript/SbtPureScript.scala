@@ -37,7 +37,7 @@ object SbtPureScript extends AutoPlugin {
     output := (resourceManaged in purescript).value / "js" / "main.js",
 
     includeFilter in purescript := "*.purs",
-    sources in purescript := (sourceDirectories.value ** ((includeFilter in purescript).value -- (excludeFilter in purescript).value)).get,
+    sources in purescript := ((sourceDirectories in purescript).value ** ((includeFilter in purescript).value -- (excludeFilter in purescript).value)).get,
 
     purescript := {
       streams.value.log.info(s"Purescript compiling on ${(sources in purescript).value.length} source(s)")
