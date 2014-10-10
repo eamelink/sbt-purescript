@@ -1,6 +1,7 @@
 package net.eamelink.sbt.purescript
 
 import com.typesafe.sbt.web._
+import com.typesafe.sbt.web.incremental._
 import sbt._
 import sbt.Keys._
 import sbt.ProcessLogger
@@ -40,14 +41,27 @@ object SbtPureScript extends AutoPlugin {
     sources in purescript := ((sourceDirectories in purescript).value ** ((includeFilter in purescript).value -- (excludeFilter in purescript).value)).get,
 
     purescript := {
-      streams.value.log.info(s"Purescript compiling on ${(sources in purescript).value.length} source(s)")
+      val srcs = (sources in purescript).value
 
-      val command = executable.value :: pscOptions.value.toList ++ ("--output" :: output.value.absolutePath :: (sources in purescript).value.getPaths.toList)
+      val hash = OpInputHash.hashString(
+        ((executable.value +: pscOptions.value) ++ srcs :+ output.value).mkString("\0"))
 
-      val problems = doCompile(command, sources.value)
-      CompileProblems.report((reporter in purescript).value, problems)
+      implicit val opInputHasher = OpInputHasher[Unit](_ => hash)
 
-      Seq(output.value)
+      val (outs, ()) = syncIncremental(streams.value.cacheDirectory / "run", Seq(())) {
+        case Seq() => (Map.empty, ())
+        case _ =>
+          streams.value.log.info(s"Purescript compiling on ${srcs.length} source(s)")
+
+          val command = executable.value :: pscOptions.value.toList ++ ("--output" :: output.value.absolutePath :: srcs.getPaths.toList)
+
+          val problems = doCompile(command, srcs)
+          CompileProblems.report((reporter in purescript).value, problems)
+
+          (Map(() -> (if (problems.nonEmpty) OpFailure else OpSuccess(srcs.toSet, Set(output.value)))), ())
+      }
+
+      outs.toSeq
     },
 
     (executable in psci) := "psci",
