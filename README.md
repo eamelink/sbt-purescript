@@ -27,12 +27,21 @@ Or in a Play Framework project:
 
 There is also a `psci` command that will run the purescript interpreter, with your sources loaded.
 
+## Using bower
+
+Many purescript packages are distributed with bower. If you want to use bower to manage dependencies, you can just work with a regular `bower.json` file. To let the `purescript` task find the dependencies, add the following to `build.sbt`:
+
+    // Include only the `src` directories from the bower packages
+    (sourceDirectories in purescript in Assets) ++= (baseDirectory.value / "bower_components" * AllPassFilter / "src").get
+
 ## Options
 
 There's a `pscOptions` key, with a sequence of parameters given to the `psc` command. You need to scope with within the `Assets` config. For example:
 
     import PureScriptKeys._
     pscOptions in Assets := Seq("--module", "Main", "--main") 
+
+ 
 
 ## Hacking on the plugin
 
