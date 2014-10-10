@@ -33,3 +33,11 @@ There's a `pscOptions` key, with a sequence of parameters given to the `psc` com
 
     import PureScriptKeys._
     pscOptions in Assets := Seq("--module", "Main", "--main") 
+
+## Hacking on the plugin
+
+Run `scripted` to run the plugin test suite (which is barely existent at this point...)
+
+## License
+
+MIT License, see `LICENSE` file.

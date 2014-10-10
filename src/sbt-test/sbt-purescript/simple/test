@@ -1,0 +1,3 @@
+# Check if the purescript task creates the output file
+> purescript
+$ exists target/web/purescript/main/js/main.js
