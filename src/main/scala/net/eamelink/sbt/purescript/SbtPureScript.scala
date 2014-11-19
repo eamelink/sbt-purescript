@@ -35,7 +35,7 @@ object SbtPureScript extends AutoPlugin {
   val basePureScriptSettings = Seq(
     executable := "psc",
     pscOptions := Nil,
-    output := (resourceManaged in purescript).value / "js" / "main.js",
+    output := (crossTarget in purescript).value / "js" / "main.js",
 
     includeFilter in purescript := "*.purs",
     sources in purescript := ((sourceDirectories in purescript).value ** ((includeFilter in purescript).value -- (excludeFilter in purescript).value)).get,
